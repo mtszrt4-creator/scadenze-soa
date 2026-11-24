@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scadenza attestazione SOA: cerca la tua società</title>
+<meta name="description" content="Scrivi il nome o il codice fiscale di una società e vedi quando scade la sua attestazione SOA e l'ultimo giorno per firmare il rinnovo. Dati aperti ANAC.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="data:,">
+<style>
+:root{
+  --fondo:#f6f5f1; --carta:#ffffff; --testo:#1c1b19; --tenue:#5a5750; --bordo:#8a867c; --linea:#dcd9d0;
+  --marchio:#2f4a3f; --su-marchio:#ffffff; --accento:#b4410f; --su-accento:#ffffff; --avviso:#fff4d6; --avviso-bordo:#8a6a00;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --fondo:#151513; --carta:#1f1e1b; --testo:#ecebe6; --tenue:#b3b0a6; --bordo:#8c897f; --linea:#34322d;
+  --marchio:#9cc4b2; --su-marchio:#151513; --accento:#e0763f; --su-accento:#151513; --avviso:#2b2410; --avviso-bordo:#d9b34a;
+}}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%;scrollbar-gutter:stable}
+body{margin:0;background:var(--fondo);color:var(--testo);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;overscroll-behavior:contain}
+main{max-width:44rem;margin:0 auto;padding:20px 16px 48px}
+h1{font-size:1.65rem;line-height:1.2;margin:0 0 12px;text-wrap:balance}
+h2{font-size:1.15rem;margin:36px 0 8px}
+p{margin:0 0 12px}
+a{color:var(--marchio)}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid var(--accento);outline-offset:2px}
+.avviso{background:var(--avviso);border:1px solid var(--avviso-bordo);border-radius:10px;padding:12px 14px;margin:0 0 20px;font-size:.95rem}
+.avviso p{margin:0 0 6px}.avviso p:last-child{margin:0}
+form{display:flex;gap:8px;margin:0 0 6px}
+input[type=search]{flex:1;min-width:0;height:48px;font:inherit;font-size:16px;padding:0 12px;border:2px solid var(--bordo);border-radius:10px;background:var(--carta);color:var(--testo)}
+button{height:48px;min-width:48px;padding:0 18px;font:inherit;font-weight:600;border:0;border-radius:10px;background:var(--accento);color:var(--su-accento);cursor:pointer;touch-action:manipulation}
+.aiuto{font-size:.9rem;color:var(--tenue);margin:0 0 16px}
+#esito{margin:0 0 10px;font-weight:600}
+.scheda{background:var(--carta);border:1px solid var(--linea);border-radius:12px;padding:14px;margin:0 0 12px}
+.scheda h3{font-size:1.05rem;line-height:1.3;margin:0 0 2px;overflow-wrap:anywhere}
+.sub{color:var(--tenue);font-size:.9rem;margin:0 0 10px;overflow-wrap:anywhere}
+.date{display:grid;grid-template-columns:1fr;gap:10px;margin:0}
+.date div{border-top:1px solid var(--linea);padding-top:8px}
+dt{font-size:.85rem;color:var(--tenue)}
+dd{margin:0;font-size:1.05rem}
+.giorni{display:block;font-size:.9rem;color:var(--tenue)}
+.firma dd{font-weight:700}
+.firma.vicina{background:var(--avviso);border-radius:8px;padding:8px 10px!important;border:1px solid var(--avviso-bordo)!important}
+.hero{background:var(--marchio);color:var(--su-marchio);border-radius:14px;padding:22px 16px 14px;margin:0 0 18px}
+.hero .aiuto{color:inherit;margin:0}
+.hero :focus-visible{outline-color:var(--su-marchio)}
+.fonte{font-size:.8rem;color:var(--tenue);margin:8px 0 0}
+.nota{font-size:.9rem;color:var(--tenue)}
+.legale{margin-top:40px;padding-top:16px;border-top:1px solid var(--linea);font-size:.88rem;color:var(--tenue)}
+.legale h2{font-size:1rem;color:var(--testo)}
+@media (min-width:640px){
+  h1{font-size:2.1rem}
+  .date{grid-template-columns:1fr 1fr}
+  .date .firma{grid-column:1/-1}
+}
+@media (hover:hover){button:hover{filter:brightness(1.08)}}
+@media (forced-colors:active){button,input,.scheda{border:1px solid ButtonText}}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<main>
+<section class="hero">
+<h1>Scadenza attestazione SOA: quando scade e entro quando firmare il rinnovo</h1>
+<p>Cerca una società per ragione sociale o codice fiscale. La pagina mostra le due scadenze dell'attestazione SOA e l'ultimo giorno utile per firmare il contratto di rinnovo.</p>
+<form id="f" role="search" autocomplete="off">
+  <input id="q" type="search" name="q" placeholder="Ragione sociale o codice fiscale" aria-label="Ragione sociale o codice fiscale" enterkeyhint="search" autocapitalize="off" spellcheck="false" inputmode="search" required>
+  <button type="submit">Cerca</button>
+</form>
+<p class="aiuto">Servono almeno 3 caratteri. Con più parole la ricerca si restringe. Nell'elenco entrano le società di capitali, oltre a cooperative e consorzi.</p>
+</section>
+
+<div class="avviso" role="note">
+  <p><strong>Dati ANAC aggiornati al <span id="agg">03/11/2026</span>.</strong> Servizio indipendente, non è un servizio ANAC e non è di una SOA.</p>
+  <p>Prima di decidere, verifica sempre sul <a href="https://portale-servizi.anticorruzione.it/" rel="noopener">Casellario ANAC</a>: fa fede quello.</p>
+</div>
+
+<p id="esito" role="status" aria-live="polite"></p>
+<div id="ris"></div>
+
+<h2>Per le società di consulenza SOA</h2>
+<p>Ogni mese posso preparare l'elenco delle imprese con l'attestazione in scadenza nei mesi successivi, diviso per regione, con la data entro cui firmare il rinnovo. Il file contiene i dati pubblici ANAC e nessun recapito delle imprese.</p>
+<p><a href="mailto:mz.studio.lab@gmail.com?subject=Elenco%20mensile%20imprese%20SOA%20in%20scadenza">Scrivi a mz.studio.lab@gmail.com</a> indicando le regioni che ti interessano.</p>
+
+<h2>Come si calcola</h2>
+<p class="nota">La scadenza quinquennale e la verifica triennale arrivano dal file ANAC. «Firma il contratto entro» è la scadenza quinquennale meno 90 giorni, perché il contratto con la SOA per il rinnovo va firmato almeno 90 giorni prima della scadenza (D.Lgs. 36/2023, Allegato II.12). Controlla il testo vigente e chiedi alla tua SOA: la data «Firma il contratto entro» è un calcolo, non un parere.</p>
+
+<section class="legale" aria-labelledby="note-legali">
+  <h2 id="note-legali">Note legali e dati</h2>
+  <p>Dati: <a href="https://dati.anticorruzione.it/opendata/dataset/attestazioni-soa-v2-filesystem-attestato-csv" rel="noopener">ANAC, «Attestazioni SOA v2»</a>, licenza CC BY-SA 4.0 (<a href="https://creativecommons.org/licenses/by-sa/4.0/deed.it" rel="noopener">testo della licenza</a>), aggiornamento del 03/11/2026. Dati elaborati da Mattias Zoratto, P.IVA 03084430309, Via Dante Alighieri 16, 33040 Pradamano (UD), mz.studio.lab@gmail.com: selezionate solo società di capitali, insieme a cooperative e consorzi con attestazione in stato pubblico. Questa pagina e i file di dati che pubblica sono sotto la stessa licenza CC BY-SA 4.0, con attribuzione ad ANAC. Servizio indipendente, non è di ANAC né di una SOA e non offre attestazioni. I dati possono essere incompleti o non aggiornati: fa fede il Casellario ANAC.</p>
+  <p>Scrivendo a mz.studio.lab@gmail.com tratto il tuo indirizzo e il contenuto del messaggio solo per risponderti (art. 6.1.b e 6.1.f GDPR), li conservo 12 mesi, non li cedo, e puoi chiedere cancellazione e accesso. Il sito non usa cookie. L'hosting è GitHub Pages, che registra gli indirizzi IP.</p>
+</section>
+</main>
+
+<script>
+(function(){
+'use strict';
+var STOP={SRL:1,SPA:1,SRLS:1,SOCIETA:1,UNIPERSONALE:1,LIMITATA:1,RESPONSABILITA:1,PER:1,AZIONI:1,DEL:1,DELLA:1,DEI:1,DELLE:1,DI:1,UNICO:1,SOCIO:1,IN:1,LA:1,IL:1,AND:1};
+var META=null, CACHE={}, MAXRIS=30;
+var $=function(s){return document.querySelector(s)};
+function norm(s){return s.toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^A-Z0-9]+/g,' ').trim()}
+function it(d){return d.slice(8,10)+'/'+d.slice(5,7)+'/'+d.slice(0,4)}
+function utc(d){return Date.UTC(+d.slice(0,4),+d.slice(5,7)-1,+d.slice(8,10))}
+function oggi(){var n=new Date();return Date.UTC(n.getFullYear(),n.getMonth(),n.getDate())}
+function meno90(d){var t=new Date(utc(d)-90*864e5);return t.toISOString().slice(0,10)}
+function giorni(d){return Math.round((utc(d)-oggi())/864e5)}
+function frase(n,scad){
+  if(n===0)return 'è oggi';
+  var a=Math.abs(n), g=a===1?'1 giorno':a+' giorni';
+  return n>0?'mancano '+g:(scad?'scaduta da ':'passato da ')+g;
+}
+function carica(url){
+  if(!CACHE[url])CACHE[url]=fetch(url).then(function(r){if(r.status===404)return [];if(!r.ok)throw new Error(r.status);return r.json()});
+  return CACHE[url];
+}
+function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
+function voce(dl,cl,k,v,extra){
+  var d=el('div',cl);d.appendChild(el('dt',null,k));var dd=el('dd',null,v);
+  if(extra)dd.appendChild(el('span','giorni',extra));d.appendChild(dd);dl.appendChild(d);
+}
+function scheda(r){
+  var s=el('article','scheda');
+  s.appendChild(el('h3',null,r[1]));
+  s.appendChild(el('p','sub','CF '+r[0]+' · '+META.prov[r[2]]+' · SOA '+META.soa[r[3]].replace(/\s*\(.*$/,'')));
+  var dl=el('dl','date');
+  var gq=giorni(r[5]);
+  voce(dl,null,'Scadenza quinquennale',it(r[5]),frase(gq,true));
+  if(r[4]){var gt=giorni(r[4]);voce(dl,null,'Scadenza triennale',it(r[4]),gt>0?frase(gt,true):(gq>0?'data già trascorsa, la verifica può essere in corso':frase(gt,true)));}
+  var f=meno90(r[5]);
+  if(gq>0)voce(dl,'firma'+(giorni(f)<=180?' vicina':''),'Firma il contratto entro',it(f),frase(giorni(f),false));
+  s.appendChild(dl);
+  s.appendChild(el('p','fonte',(gq<=0?'Risulta scaduta nel dato ANAC del '+it(META.agg)+': può essere stata rinnovata dopo. ':'Firma entro = scadenza quinquennale meno 90 giorni (D.Lgs. 36/2023, Allegato II.12). Dato ANAC al '+it(META.agg)+'. ')+'Verifica sul Casellario ANAC.'));
+  return s;
+}
+function cerca(testo){
+  var esito=$('#esito'), ris=$('#ris');
+  ris.textContent='';
+  var q=norm(testo).replace(/^(C F|CF|P IVA|PIVA) (?=\d)/,'').replace(/\bS R L S?\b|\bS P A\b/g,' ').replace(/ +/g,' ').trim();
+  var tok=q?q.split(' ').filter(function(t){return !STOP[t]}):[];
+  if(norm(testo).replace(/ /g,'').length<3){esito.textContent='Scrivi almeno 3 caratteri.';return}
+  var chiave=tok.filter(function(t){return t.length>=3}).sort(function(a,b){return b.length-a.length})[0];
+  if(!chiave){esito.textContent='Aggiungi una parola del nome, per esempio la prima.';return}
+  esito.textContent='Cerco…';
+  var chk=chiave.slice(0,3).toLowerCase();
+  (META.k.split(' ').indexOf(chk)<0?Promise.resolve([]):carica('d/k-'+chk+'.json')).then(function(lista){
+    var out=lista.filter(function(r){
+      var nt=norm(r[1]).split(' ');
+      return tok.every(function(t){return r[0].indexOf(t)===0||nt.some(function(n){return n.indexOf(t)===0})});
+    });
+    out.sort(function(a,b){return (a[0]===q?0:1)-(b[0]===q?0:1)||a[1].localeCompare(b[1])});
+    if(!out.length){
+      esito.textContent='Nessun risultato per «'+testo.trim()+'».';
+      ris.appendChild(el('p','nota','Nell\'elenco ci sono solo società di capitali, insieme a cooperative e consorzi con attestazione pubblicata da ANAC. Una ditta individuale o una società di persone non compare. Prova con meno parole oppure con il codice fiscale di 11 cifre, e controlla sul Casellario ANAC.'));
+      return;
+    }
+    esito.textContent=out.length===1?'1 risultato.':(out.length>MAXRIS?'Più di '+MAXRIS+' risultati: ne mostro '+MAXRIS+'. Aggiungi una parola per restringere.':out.length+' risultati.');
+    out.slice(0,MAXRIS).forEach(function(r){ris.appendChild(scheda(r))});
+  }).catch(function(){esito.textContent='Non riesco a caricare i dati. Riprova tra poco.'});
+}
+fetch('meta.json').then(function(r){return r.json()}).then(function(m){META=m;$('#agg').textContent=it(m.agg)}).catch(function(){});
+$('#f').addEventListener('submit',function(e){
+  e.preventDefault();
+  var v=$('#q').value;
+  if(META)cerca(v);else fetch('meta.json').then(function(r){return r.json()}).then(function(m){META=m;cerca(v)});
+});
+})();
+</script>
+</body>
+</html>
